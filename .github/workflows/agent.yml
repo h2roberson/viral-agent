@@ -1,0 +1,27 @@
+name: Viral Shorts Agent
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Run agent
+        run: python agent.py
+
+      - name: Commit results
+        run: |
+          git config --global user.name "viral-agent"
+          git config --global user.email "agent@github.com"
+          git add outputs memory.json
+          git commit -m "Generate viral content" || echo "No changes"
+          git push

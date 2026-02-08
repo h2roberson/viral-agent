@@ -18,10 +18,11 @@ jobs:
       - name: Run agent
         run: python agent.py
 
-      - name: Commit results
-        run: |
-          git config --global user.name "h2roberson"
-          git config --global user.email "h2roberson@outlook.com"
-          git add outputs memory.json
-          git commit -m "Generate viral content" || echo "No changes"
-          git push
+    - name: Commit results and push
+  run: |
+    git config --global user.name "viral-agent"
+    git config --global user.email "agent@github.com"
+    git add outputs memory.json
+    git commit -m "Generate viral content" || echo "No changes"
+    git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+    git push origin main

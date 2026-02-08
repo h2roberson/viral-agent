@@ -1,41 +1,36 @@
 name: Viral Shorts Agent
 
 on:
-  workflow_dispatch:   # Manual trigger
-  schedule:            # Runs every 6 hours
+  workflow_dispatch:
+  schedule:
     - cron: "0 */6 * * *"
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-
     steps:
-      # 1️⃣ Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1️⃣ Checkout the repo with credentials for pushing
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true   # <- THIS ALLOWS PUSH WITH GITHUB_TOKEN
 
-      # 2️⃣ Set up Python
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      # 2️⃣ Setup Python
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      # 3️⃣ Install Python dependencies (optional)
-      - name: Install dependencies
-        run: |
+      # 3️⃣ Install dependencies
+      - run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || echo "No requirements file, skipping"
+          pip install -r requirements.txt || echo "No requirements file"
 
       # 4️⃣ Run your AI agent
-      - name: Run AI agent
-        run: python agent.py
+      - run: python agent.py
 
-      # 5️⃣ Commit and push results using GitHub token
-      - name: Commit outputs and memory.json
-        run: |
+      # 5️⃣ Commit & push outputs
+      - run: |
           git config --global user.name "h2roberson"
-          git config --global user.email "h2roberson@icloud.com"
+          git config --global user.email "h2roberson@outlook.com"
           git add outputs memory.json
           git commit -m "Generate viral content" || echo "No changes to commit"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git push origin main
+          git push

@@ -33,8 +33,8 @@ jobs:
       # 5️⃣ Commit and push results using GitHub token
       - name: Commit outputs and memory.json
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "github-actions@github.com"
+          git config --global user.name "h2roberson"
+          git config --global user.email "h2roberson@icloud.com"
           git add outputs memory.json
           git commit -m "Generate viral content" || echo "No changes to commit"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
